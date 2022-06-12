@@ -58,10 +58,12 @@ Function insertData()
 	Dim Path As String
 	Path = "D:\Bilkent Uni\MED_IDEA Internship\Red-Assignments2022\Assignment1\"
 	Dim dbName As String
+	'dbName = Client.LocateInputFile (Path + "4- BOBI FRS Nakit Akis Tablosu - Dolayli Yöntem (Konsolide).xlsx")
 	dbName = Client.LocateInputFile (Path + "test2.xlsx")
 	Dim task As ImportExcel
 	Set task = Client.GetImportTask("ImportExcel")
 	task.FileToImport = dbName
+	'task.SheetToImport = "BOBI FRS NAT Dolayli Konsolide"
 	task.SheetToImport = "Sheet1"
 	task.OutputFilePrefix = "Excel"
 	task.FirstRowIsFieldName = "False"
@@ -73,6 +75,7 @@ Function insertData()
 	Set task = Nothing
 	
 	Dim db1 As Database
+	'Set db1 = OpenDB(Path + "Excel-BOBI FRS NAT Dolayli Konsolide.IMD")
 	Set db1 = OpenDB(Path + "Excel-Sheet1.IMD")
 	' Access the RecordSet.
 	Dim RS1 As RecordSet
