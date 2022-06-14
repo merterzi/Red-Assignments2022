@@ -17,6 +17,13 @@ class App:
         root.geometry(alignstr)
         root.resizable(width=False, height=False)
 
+        # ====================================
+        # =========== START OF UI ============
+        # P.S You should not need to change
+        # These parts, so you can skip them
+        # =========== START OF UI =============
+        # =====================================
+
         # This is for the Lines =======================
         canvas=Canvas(root, width=864, height=569)
     
@@ -57,15 +64,13 @@ class App:
         ft = tkFont.Font(family='Times',size=10)
 
         listOfAllChildren = []
+        listOfAllChildren_var = []
 
         coveredDateChildren = [self.coveredDate_start_var, self.coveredDate_end_var]
         self.coveredDate=tk.Checkbutton(root, variable=self.coveredDate_var, font=ft, fg="#000000", 
         justify="center", text="Covered Date", offvalue="0", onvalue="1", 
         command=lambda: self.parentPressed(self.coveredDate_var, coveredDateChildren, True))
         self.coveredDate.place(x=30,y=40,width=130,height=15)
-        # listOfAllChildren.append((self.coveredDate_var, 1)) #The 1 here is ID (will be column number in the future)
-        listOfAllChildren.append((self.coveredDate_start_var, 1))
-        listOfAllChildren.append((self.coveredDate_end_var, 2))
 
         self.coveredDate_start=tk.Checkbutton(root, variable=self.coveredDate_start_var, font=ft, fg="#000000", 
         justify="center", text="Covered Date Start", offvalue="0", onvalue="1", 
@@ -77,7 +82,6 @@ class App:
         command=lambda: self.parentPressed(self.coveredDate_var, [self.coveredDate_end_var], False))
         self.coveredDate_end.place(x=60,y=100,width=130,height=20)
 
-
         self.fiscalYear_var = tk.IntVar()
         self.fiscalYear_start_var = tk.IntVar()
         self.fiscalYear_end_var = tk.IntVar()
@@ -87,8 +91,6 @@ class App:
         justify="center", text="Fiscal Year", offvalue="0", onvalue="1", 
         command=lambda: self.parentPressed(self.fiscalYear_var, fiscalYearChildren, True))
         self.fiscalYear.place(x=245,y=40,width=130,height=20)
-        listOfAllChildren.append((self.fiscalYear_start_var, 3))
-        listOfAllChildren.append((self.fiscalYear_end_var, 4))
 
         self.fiscalYear_start=tk.Checkbutton(root, variable=self.fiscalYear_start_var, font=ft, fg="#000000", 
         justify="center", text="Fiscal Year Start", offvalue="0", onvalue="1", 
@@ -105,7 +107,6 @@ class App:
         justify="center", text="Entered Date", offvalue="0", onvalue="1", 
         command=lambda: self.checkboxPressed(self.enteredDate_var))
         self.enteredDate.place(x=440,y=40,width=130,height=20)
-        listOfAllChildren.append((self.enteredDate_var, 5))
 
         self.entry_var = tk.IntVar()
         self.entry_comment_var = tk.IntVar()
@@ -115,8 +116,6 @@ class App:
         justify="center", text="Entries", offvalue="0", onvalue="1", 
         command=lambda: self.parentPressed(self.entry_var, entryChildren, True))
         self.entry.place(x=630,y=40,width=130,height=20)
-        listOfAllChildren.append((self.entry_comment_var, 6))
-        listOfAllChildren.append((self.entry_number_var, 7))
         
         self.entry_comment=tk.Checkbutton(root, variable=self.entry_comment_var, font=ft, fg="#000000", 
         justify="center", text="Entry Comment", offvalue="0", onvalue="1", 
@@ -133,49 +132,42 @@ class App:
         justify="center", text="Total Credit", offvalue="0", onvalue="1",
         command=lambda: self.checkboxPressed( self.totalCredit_var))
         self.totalCredit.place(x=30,y=170,width=112,height=20)
-        listOfAllChildren.append((self.totalCredit_var, 8))
 
         self.totalDebit_var = tk.IntVar()
         self.totalDebit=tk.Checkbutton(root, variable=self.totalDebit_var, font=ft, fg="#000000", 
         justify="center", text="Total Debit", offvalue="0", onvalue="1", 
         command=lambda: self.checkboxPressed( self.totalDebit_var))
         self.totalDebit.place(x=30,y=210,width=110,height=20)
-        listOfAllChildren.append((self.totalDebit_var, 9))
 
         self.entryNumberCounter_var = tk.IntVar()
         self.entryNumberCounter=tk.Checkbutton(root, variable=self.entryNumberCounter_var, font=ft, fg="#000000", 
         justify="center", text="Entry Number Counter", offvalue="0", onvalue="1", 
         command=lambda: self.checkboxPressed( self.entryNumberCounter_var))
         self.entryNumberCounter.place(x=30,y=250,width=170,height=20)
-        listOfAllChildren.append((self.entryNumberCounter_var, 10))
 
         self.debitCardCode_var = tk.IntVar()
         self.debitCardCode=tk.Checkbutton(root, variable=self.debitCardCode_var, font=ft, fg="#000000", 
         justify="center", text="Debit Card Code", offvalue="0", onvalue="1", 
         command=lambda: self.checkboxPressed( self.debitCardCode_var))
-        self.debitCardCode.place(x=30,y=290,width=140,height=20)
-        listOfAllChildren.append((self.debitCardCode_var, 11))
+        self.debitCardCode.place(x=30,y=290,width=140,height=20)        
 
         self.postingDate_var = tk.IntVar()
         self.postingDate=tk.Checkbutton(root, variable=self.postingDate_var, font=ft, fg="#000000", 
         justify="center", text="Posting Date", offvalue="0", onvalue="1", 
         command=lambda: self.checkboxPressed( self.postingDate_var))
         self.postingDate.place(x=30,y=330,width=120,height=20)
-        listOfAllChildren.append((self.postingDate_var, 12))
 
         self.documentReference_var = tk.IntVar()
         self.documentReference=tk.Checkbutton(root, variable=self.documentReference_var, font=ft, fg="#000000", 
         justify="center", text="Document Reference", offvalue="0", onvalue="1", 
         command=lambda: self.checkboxPressed( self.documentReference_var))
         self.documentReference.place(x=30,y=370,width=160,height=20)
-        listOfAllChildren.append((self.documentReference_var, 13))
 
         self.detailComment_var = tk.IntVar()
         self.detailComment=tk.Checkbutton(root, variable=self.detailComment_var, font=ft, fg="#000000", 
         justify="center", text="Detail Comment", offvalue="0", onvalue="1", 
         command=lambda: self.checkboxPressed( self.detailComment_var))
         self.detailComment.place(x=30,y=410,width=130,height=20)
-        listOfAllChildren.append((self.detailComment_var, 14))
 
         self.line_var = tk.IntVar()
         self.line_number_var = tk.IntVar()
@@ -186,8 +178,6 @@ class App:
         justify="center", text="Line", offvalue="0", onvalue="1", 
         command=lambda: self.parentPressed(self.line_var, lineChidlren, True))
         self.line.place(x=240,y=170,width=110,height=20)
-        listOfAllChildren.append((self.line_number_var, 15))
-        listOfAllChildren.append((self.line_counter_var, 16))
         
         self.line_number=tk.Checkbutton(root, variable=self.line_number_var, font=ft, fg="#000000", 
         justify="center", text="Line Number", offvalue="0", onvalue="1", 
@@ -215,33 +205,30 @@ class App:
         justify="center", text="Account Main ID", offvalue="0", onvalue="1", 
         command=lambda: self.parentPressed(self.account_var, [self.account_mainID_var], False))
         self.account_mainID.place(x=485,y=200,width=117,height=20)
-        listOfAllChildren.append((self.account_mainID_var, 17))
         
         self.account_mainDesc=tk.Checkbutton(root, variable=self.account_mainDesc_var, font=ft, fg="#000000", 
         justify="center", text="Account Main Description", offvalue="0", onvalue="1", 
         command=lambda: self.parentPressed(self.account_var, [self.account_mainDesc_var], False))
         self.account_mainDesc.place(x=485,y=230,width=170,height=20)
-        listOfAllChildren.append((self.account_mainDesc_var, 18))
         
         self.account_subID=tk.Checkbutton(root, variable=self.account_subID_var, font=ft, fg="#000000", 
         justify="center", text="Account Sub ID", offvalue="0", onvalue="1", 
         command=lambda: self.parentPressed(self.account_var, [self.account_subID_var], False))
         self.account_subID.place(x=485,y=260,width=112,height=20)
-        listOfAllChildren.append((self.account_subID_var, 19))
         
         self.account_subDesc=tk.Checkbutton(root, variable=self.account_subDesc_var, font=ft, fg="#000000", 
         justify="center", text="Account Sub Description", offvalue="0", onvalue="1", 
         command=lambda: self.parentPressed(self.account_var, [self.account_subDesc_var], False))
         self.account_subDesc.place(x=485,y=290,width=162,height=20)
-        listOfAllChildren.append((self.account_subDesc_var, 20))
 
         self.account_amount=tk.Checkbutton(root, variable=self.account_amount_var, font=ft, fg="#000000", 
         justify="center", text="Amount", offvalue="0", onvalue="1", 
         command=lambda: self.parentPressed(self.account_var, [self.account_amount_var], False))
         self.account_amount.place(x=485,y=320,width=70,height=20)
-        listOfAllChildren.append((self.account_amount_var, 21))
 
-        listOfAllChildren_var = [(child[0]) for child in listOfAllChildren]
+        self.text = Text(root, state='disabled', width=40, height=5, wrap=WORD)
+        self.text.place(x = 450, y = 390)
+
         self.selectAll_var = tk.IntVar()
         ft = tkFont.Font(family='Times',size=16)
         self.selectAll=tk.Checkbutton(root, variable=self.selectAll_var, font=ft, fg="#000000", 
@@ -249,15 +236,57 @@ class App:
         command=lambda: self.parentPressed(self.selectAll_var, listOfAllChildren_var, True))
         self.selectAll.place(x=50,y=470,width=130,height=20)
 
-        self.text = Text(root, state='disabled', width=40, height=5, wrap=WORD)
-        self.text.place(x = 450, y = 390)
+        selectFile_button = Button(root, text = "Choose File", command=self.selectFile).place(x = 530, y = 480)
+        ok_button = Button(root, text = "OK", command=lambda: self.okButtonCommand(listOfAllChildren)).place(x = 670, y = 480)
 
+        listOfAllChildren.append((self.coveredDate_start_var, 1)) # The 1 here is column number in the cleaned version of the XML)
+        listOfAllChildren.append((self.coveredDate_end_var, 2))
+        listOfAllChildren.append((self.fiscalYear_start_var, 3))
+        listOfAllChildren.append((self.fiscalYear_end_var, 4))
+        listOfAllChildren.append((self.enteredDate_var, 5))
+        listOfAllChildren.append((self.entry_comment_var, 6))
+        listOfAllChildren.append((self.entry_number_var, 7))
+        listOfAllChildren.append((self.totalCredit_var, 8))
+        listOfAllChildren.append((self.totalDebit_var, 9))
+        listOfAllChildren.append((self.entryNumberCounter_var, 10))
+        listOfAllChildren.append((self.debitCardCode_var, 11))
+        listOfAllChildren.append((self.postingDate_var, 12))
+        listOfAllChildren.append((self.documentReference_var, 13))
+        listOfAllChildren.append((self.detailComment_var, 14))
+        listOfAllChildren.append((self.line_number_var, 15))
+        listOfAllChildren.append((self.line_counter_var, 16))
+        listOfAllChildren.append((self.account_mainID_var, 17))
+        listOfAllChildren.append((self.account_mainDesc_var, 18))
+        listOfAllChildren.append((self.account_subID_var, 19))
+        listOfAllChildren.append((self.account_subDesc_var, 20))
+        listOfAllChildren.append((self.account_amount_var, 21))
+
+        # ====================================
+        # =========== END OF UI ============
+        # P.S Check the comments below to 
+        # see what variables you are available
+        # =========== END OF UI =============
+        # =====================================
+
+        ''' 
+            There is the list called listOfAllChildren, it contains 21 tuples
+            representing the 21 columns, each of the tuple has the format of
+            (checkBox varibale, column number)
+            checkBox variable: it is used to read/write the value of the check box
+            column number: the index of the column after the XML is cleaned (may need to revised, check above)
+        '''
+
+        ''' 
+            The other variable is listOfAllChildren_var, it contains only the 
+            check box variables used to access the checkboxes, this is only
+            used for the selectAll button above
+        '''
+
+        listOfAllChildren_var = [(child[0]) for child in listOfAllChildren]
+        
         self.file = None # this will store the file that will be imported
         self.fileCounter = 1
         self.fileList = []
-        
-        selectFile_button = Button(root, text = "Choose File", command=self.selectFile).place(x = 530, y = 480)
-        ok_button = Button(root, text = "OK", command=lambda: self.okButtonCommand(listOfAllChildren)).place(x = 670, y = 480)
 
     def parentPressed(self, parentVar, children, isParent):
         if ((parentVar.get() == 1) and (isParent == True)):
@@ -290,6 +319,7 @@ class App:
         self.text.configure(state='disabled')
 
     def okButtonCommand(self, childrenList):
+        listOfChosenColumns = [child[1] for child in childrenList if child[0].get() == 1]
         for child in childrenList:
             if child[0].get() == 1:
                 print("Column", child[1], "Is Picked")
