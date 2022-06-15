@@ -264,7 +264,7 @@ class App:
         # ====================================
         # =========== END OF UI ============
         # P.S Check the comments below to 
-        # see what variables you are available
+        # see what variables are available
         # =========== END OF UI =============
         # =====================================
 
