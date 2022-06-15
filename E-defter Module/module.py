@@ -239,27 +239,27 @@ class App:
         selectFile_button = Button(root, text = "Choose File", command=self.selectFile).place(x = 530, y = 480)
         ok_button = Button(root, text = "OK", command=lambda: self.okButtonCommand(listOfAllChildren)).place(x = 670, y = 480)
 
-        listOfAllChildren.append((self.coveredDate_start_var, 1)) # The 1 here is column number in the cleaned version of the XML)
-        listOfAllChildren.append((self.coveredDate_end_var, 2))
-        listOfAllChildren.append((self.fiscalYear_start_var, 3))
-        listOfAllChildren.append((self.fiscalYear_end_var, 4))
-        listOfAllChildren.append((self.enteredDate_var, 5))
-        listOfAllChildren.append((self.entry_comment_var, 6))
-        listOfAllChildren.append((self.entry_number_var, 7))
-        listOfAllChildren.append((self.totalCredit_var, 8))
-        listOfAllChildren.append((self.totalDebit_var, 9))
-        listOfAllChildren.append((self.entryNumberCounter_var, 10))
-        listOfAllChildren.append((self.debitCardCode_var, 11))
-        listOfAllChildren.append((self.postingDate_var, 12))
-        listOfAllChildren.append((self.documentReference_var, 13))
-        listOfAllChildren.append((self.detailComment_var, 14))
-        listOfAllChildren.append((self.line_number_var, 15))
-        listOfAllChildren.append((self.line_counter_var, 16))
-        listOfAllChildren.append((self.account_mainID_var, 17))
-        listOfAllChildren.append((self.account_mainDesc_var, 18))
-        listOfAllChildren.append((self.account_subID_var, 19))
-        listOfAllChildren.append((self.account_subDesc_var, 20))
-        listOfAllChildren.append((self.account_amount_var, 21))
+        listOfAllChildren.append((self.coveredDate_start_var, 1, 'periodCoveredStart')) # The 1 here is column number in the cleaned version of the XML)
+        listOfAllChildren.append((self.coveredDate_end_var, 2, 'periodCoveredEnd'))
+        listOfAllChildren.append((self.fiscalYear_start_var, 3, 'fiscalYearStart'))
+        listOfAllChildren.append((self.fiscalYear_end_var, 4, 'fiscalYearEnd'))
+        listOfAllChildren.append((self.enteredDate_var, 5, 'enteredDate'))
+        listOfAllChildren.append((self.entry_number_var, 6, 'entryNumber'))
+        listOfAllChildren.append((self.entry_comment_var, 7, 'entryComment'))
+        listOfAllChildren.append((self.totalDebit_var, 8, 'totalDebit'))
+        listOfAllChildren.append((self.totalCredit_var, 9, 'totalCredit'))
+        listOfAllChildren.append((self.entryNumberCounter_var, 10, 'entryNumberCounter'))
+        listOfAllChildren.append((self.line_number_var, 11, 'lineNumber'))
+        listOfAllChildren.append((self.line_counter_var, 12, 'lineNumberCounter'))
+        listOfAllChildren.append((self.account_mainID_var, 13, 'accountMainID'))
+        listOfAllChildren.append((self.account_mainDesc_var, 14, 'accountMainDescription'))
+        listOfAllChildren.append((self.account_subDesc_var, 15, 'accountSubDescription'))
+        listOfAllChildren.append((self.account_subID_var, 16, 'accountSubID'))
+        listOfAllChildren.append((self.account_amount_var, 17, 'amount'))
+        listOfAllChildren.append((self.debitCardCode_var, 18, 'debitCreditCode'))
+        listOfAllChildren.append((self.postingDate_var, 19, 'postingDate'))
+        listOfAllChildren.append((self.documentReference_var, 20, 'documentReference'))
+        listOfAllChildren.append((self.detailComment_var, 21, 'detailComment'))
 
         # ====================================
         # =========== END OF UI ============
@@ -271,9 +271,10 @@ class App:
         ''' 
             There is the list called listOfAllChildren, it contains 21 tuples
             representing the 21 columns, each of the tuple has the format of
-            (checkBox varibale, column number)
+            (checkBox varibale, column number, name of column )
             checkBox variable: it is used to read/write the value of the check box
             column number: the index of the column after the XML is cleaned (may need to revised, check above)
+            name of the column: The EXACT name of the field as it appears in the .XML file
         '''
 
         ''' 
@@ -319,19 +320,24 @@ class App:
         self.text.configure(state='disabled')
 
     def okButtonCommand(self, childrenList):
-        listOfChosenColumns = [child[1] for child in childrenList if child[0].get() == 1]
-        for child in childrenList:
-            if child[0].get() == 1:
-                print("Column", child[1], "Is Picked")
-        # for filePath in self.fileList:
-        #     tree = ET.parse(filePath)
-        #     root = tree.getroot()
-        #     for child in root[0][1][0]:
-        #         print(child.tag, child.attrib)
-        #         print()
-            # print(root[0][1][0])
-            # print()
-            # print(i)
+        listOfChosenColumns = [child[2] for child in childrenList if child[0].get() == 1]
+        dataRow = {column : None for column in listOfChosenColumns}
+        self.fileList = ['D:/Bilkent Uni/MED_IDEA Internship/e-defter Module/Code/Sample Data/6080044835-202101-Y-000000.xml']
+        for filePath in self.fileList:
+            tree = ET.parse(filePath)
+            root = tree.getroot()
+            limit = 2000
+            counter = 0
+            for child in root[0][4].iter():
+                if limit == counter:
+                    break
+                filteredChildtag = child.tag.split('}', 1)[1]
+                if filteredChildtag in listOfChosenColumns:
+                    dataRow[filteredChildtag] = child.text
+                    # print(counter, "-", filteredChildtag, "---", child.text)
+                if filteredChildtag == listOfChosenColumns[-1]:
+                    print(dataRow)
+                counter += 1
 
 if __name__ == "__main__":
     root = tk.Tk()
