@@ -1,8 +1,11 @@
 import tkinter as tk
-from tkinter import *
 import tkinter.font as tkFont
-from pathlib import PurePosixPath
 import xml.etree.ElementTree as ET
+import pandas as pd
+import win32com.client as win32ComClient
+import os
+from tkinter import *
+from pathlib import PurePosixPath, Path
 from tkinter import filedialog as fd
 class App:
     def __init__(self, root):
@@ -264,7 +267,7 @@ class App:
         # ====================================
         # =========== END OF UI ============
         # P.S Check the comments below to 
-        # see what variables are available
+        # see what variables you are available
         # =========== END OF UI =============
         # =====================================
 
@@ -321,23 +324,74 @@ class App:
 
     def okButtonCommand(self, childrenList):
         listOfChosenColumns = [child[2] for child in childrenList if child[0].get() == 1]
-        dataRow = {column : None for column in listOfChosenColumns}
-        self.fileList = ['D:/Bilkent Uni/MED_IDEA Internship/e-defter Module/Code/Sample Data/6080044835-202101-Y-000000.xml']
+        # self.fileList = ['D:/Bilkent Uni/MED_IDEA Internship/e-defter Module/Code/Sample Data/6080044835-202101-Y-000000.xml']
         for filePath in self.fileList:
-            tree = ET.parse(filePath)
-            root = tree.getroot()
-            limit = 2000
-            counter = 0
-            for child in root[0][4].iter():
-                if limit == counter:
-                    break
-                filteredChildtag = child.tag.split('}', 1)[1]
-                if filteredChildtag in listOfChosenColumns:
-                    dataRow[filteredChildtag] = child.text
-                    # print(counter, "-", filteredChildtag, "---", child.text)
-                if filteredChildtag == listOfChosenColumns[-1]:
-                    print(dataRow)
+            filteredData = self.xmlToDataFrame(filePath, listOfChosenColumns)
+
+            # conversion of the DataFrame to a cleaned/filtered XML
+            fileName = Path(filePath).stem
+            fileName_clean = fileName + 'clean.xml'
+            filteredData.to_xml(fileName_clean, index = False)
+            filePath_clean = os.getcwd() + '\\' + fileName_clean
+            # print (filePath_clean, '---', fileName)
+            self.importXMLToIdea(filePath = filePath_clean, fileName = fileName)
+
+    def xmlToDataFrame (self, filePath, listOfChosenColumns):
+        tree = ET.parse(filePath)
+        root = tree.getroot()
+        limit = 3
+        counter = 0
+        filteredData = pd.DataFrame()
+        isThereNone = True
+        dataRow = {column : None for column in listOfChosenColumns}
+
+        for child in root.iter():
+            if limit == counter:
+                break
+            filteredChildtag = child.tag.split('}', 1)[1]
+            # entryDetail indicates the beginning of a new record
+            # isThereNone makes sure that no values in the dictionary are None
+            # i.e. ensures all the fields are populated
+            if (filteredChildtag == "entryDetail") and not isThereNone:
+                # we have the data row here, we need to append it to a DataFrame
+                filteredData = filteredData.append(dataRow, ignore_index=True)
                 counter += 1
+            if filteredChildtag in listOfChosenColumns:
+                dataRow[filteredChildtag] = child.text
+                isThereNone = not all(dataRow.values()) # returns false if not elements are None, returns true if there is 1 or more None values
+        
+        return filteredData
+    
+    # filePath is the path to the XML file that holds the cleaned/filtered data
+    # fileName is the name you want to be given to the new .IMD DB
+    def importXMLToIdea (self, filePath = None, fileName = None):
+        try:
+            print('step1')
+            idea = win32ComClient.Dispatch(dispatch="Idea.IdeaClient")
+            print('step2')
+            task = idea.GetImportTask ("ImportXML")
+            print('step3')
+            task.InputFileName = filePath
+            print('step4')
+            task.OutputFileName = fileName
+            print('step5')
+            projectFolder = idea.WorkingDirectory
+            self.deleteIfExists(projectFolder + '\\' + fileName + '.IMD')
+            task.PerformTask()
+            print('step6')
+
+            # deleted the temp cleaned XML file
+            os.remove(filePath)
+            print('step7')
+        finally:
+            task = None
+            db = None
+            idea = None
+
+    def deleteIfExists (self, path = None):
+        if os.path.exists(path):
+            os.remove(path)
+
 
 if __name__ == "__main__":
     root = tk.Tk()
